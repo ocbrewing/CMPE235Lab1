@@ -68,8 +68,24 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 startActivity(loginIntent);
                 break;
             case "Sensor Map":
-                Intent mapIntent = new Intent(this, MapsActivity.class);
+                Intent mapIntent = new Intent(this, MapTabActivity.class);
                 startActivity(mapIntent);
+                break;
+            case "Sensor Data":
+                Intent sensorDataIntent = new Intent(this, SensorDataActivity.class);
+                startActivity(sensorDataIntent);
+                break;
+            case "Monitor":
+                Intent monitorIntent = new Intent(this, MonitorActivity.class);
+                startActivity(monitorIntent);
+                break;
+            case "Control":
+                Intent controlIntent = new Intent(this, ControlActivity.class);
+                startActivity(controlIntent);
+                break;
+            case "My Sensors":
+                Intent mySensorsIntent = new Intent(this, MySensorsActivity.class);
+                startActivity(mySensorsIntent);
                 break;
             default:
                 Toast.makeText(getApplicationContext(), "Clicked On " + itemName, Toast.LENGTH_LONG).show();
