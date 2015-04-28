@@ -24,7 +24,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/sensor_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -45,7 +45,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".MapTabActivity"
             android:label="@string/title_activity_maps" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -56,6 +56,38 @@
             android:label="@string/title_activity_login"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.codepersist.cmpe235lab1.MainActivity" />
+        </activity>
+        <activity
+            android:name=".SensorDataActivity"
+            android:label="@string/title_activity_sensor_data"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.codepersist.cmpe235lab1.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MonitorActivity"
+            android:label="@string/title_activity_monitor"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.codepersist.cmpe235lab1.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ControlActivity"
+            android:label="@string/title_activity_control"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.codepersist.cmpe235lab1.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MySensorsActivity"
+            android:label="@string/title_activity_my_sensors"
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.codepersist.cmpe235lab1.MainActivity" />
