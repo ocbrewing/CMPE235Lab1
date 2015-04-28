@@ -9,4 +9,10 @@
     <string name="sensor_monitor">Monitor</string>
     <string name="sensor_data">Sensor Data</string>
     <string name="title_activity_maps">Sensor Map</string>
+    <string name="placeholder">PlaceHolder</string>
+
+    <string name="title_activity_sensor_data">Sensor Data</string>
+    <string name="title_activity_monitor">Sensor Monitor</string>
+    <string name="title_activity_control">Sensor Control</string>
+    <string name="title_activity_my_sensors">My Sensors</string>
 </resources>
