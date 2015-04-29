@@ -74,6 +74,8 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private View mProgressView;
     private View mEmailLoginFormView;
     private SignInButton mPlusSignInButton;
+    private Button mPlusSignOutButton;
+    private Button mPlusDisconnectButton;
     private View mSignOutButtons;
     private View mLoginFormView;
     private GoogleApiClient mGoogleApiClient;
@@ -115,6 +117,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                     }
                 }
             });
+
         } else {
             // Don't offer G+ sign in if the app's version is too low to support Google Play
             // Services.
@@ -149,6 +152,33 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         mProgressView = findViewById(R.id.login_progress);
         mEmailLoginFormView = findViewById(R.id.email_login_form);
         mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);
+        // If user clicks the Google Plus sign_out button, we clear default and reconnect
+        mPlusSignOutButton = (Button) findViewById(R.id.plus_sign_out_button);
+        mPlusSignOutButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getId()==R.id.plus_sign_out_button && mGoogleApiClient.isConnected()) {
+                    //Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+                    mGoogleApiClient.clearDefaultAccountAndReconnect();
+                    mSignOutButtons.setVisibility(View.GONE);
+                    mPlusSignInButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        // If User clicks the disconnect we revoke access
+        mPlusDisconnectButton = (Button) findViewById(R.id.plus_disconnect_button);
+        mPlusDisconnectButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getId()==R.id.plus_disconnect_button && mGoogleApiClient.isConnected()) {
+                    Plus.AccountApi.revokeAccessAndDisconnect(mGoogleApiClient);
+                    Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+                    mGoogleApiClient.disconnect();
+                    mSignOutButtons.setVisibility(View.GONE);
+                    mPlusSignInButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -194,6 +224,9 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             } else {
                 Log.d("gplus login", "Intent Returned with response code RESULT_OK");
                 Log.d("gplus login", "Client shows as "+mGoogleApiClient.isConnected());
+                Toast.makeText(this, "User is Connected!",Toast.LENGTH_LONG).show();
+                mPlusSignInButton.setVisibility(View.GONE);
+                mSignOutButtons.setVisibility(View.VISIBLE);
             }
             mIntentInProgress = false;
 
@@ -332,8 +365,9 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
     @Override
     public void onConnected(Bundle bundle) {
+        mPlusSignInButton.setVisibility(View.GONE);
+        mSignOutButtons.setVisibility(View.VISIBLE);
         Toast.makeText(this, "User is Connected!",Toast.LENGTH_LONG).show();
-        finish();
     }
 
     @Override

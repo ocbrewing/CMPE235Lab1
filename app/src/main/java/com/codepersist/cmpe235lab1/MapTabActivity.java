@@ -1,11 +1,8 @@
 package com.codepersist.cmpe235lab1;
 
 
-import android.content.Intent;
-import android.hardware.SensorEventListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 
 import android.support.v7.app.ActionBarActivity;
@@ -14,13 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
-public class MapTabActivity extends ActionBarActivity implements BlankFragment.OnFragmentInteractionListener, SensorListFragment.OnFragmentInteractionListener {
+public class MapTabActivity extends ActionBarActivity implements SensorMapFragment.OnFragmentInteractionListener, SensorListFragment.OnFragmentInteractionListener {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "SENSOR_LIST";
@@ -51,7 +46,7 @@ public class MapTabActivity extends ActionBarActivity implements BlankFragment.O
 
         mTabHost.addTab(
                 mTabHost.newTabSpec("Sensor Map").setIndicator("Sensor Map", null),
-                BlankFragment.class, sensorListBundle);
+                SensorMapFragment.class, sensorListBundle);
         mTabHost.addTab(
                 mTabHost.newTabSpec("Sensor List").setIndicator("Sensor List", null),
                 SensorListFragment.class, sensorListBundle);

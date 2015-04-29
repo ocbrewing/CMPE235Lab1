@@ -1,5 +1,6 @@
 package com.codepersist.cmpe235lab1;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -54,6 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         protected TextView mSensorInfo;
         protected TextView mSensorValue;
+        protected ImageView mImageView;
         protected CardView mCardView;
 
         public SensorViewHolder(View itemView) {
@@ -61,6 +64,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             mCardView = (CardView) itemView.findViewById(R.id.card_view);
             mSensorInfo = (TextView) itemView.findViewById(R.id.sensor_info);
             mSensorValue = (TextView) itemView.findViewById(R.id.sensor_value);
+            mImageView = (ImageView) itemView.findViewById(R.id.driving_button);
+
         }
     }
 

@@ -1,18 +1,21 @@
 package com.codepersist.cmpe235lab1;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,12 +34,12 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link BlankFragment.OnFragmentInteractionListener} interface
+ * {@link SensorMapFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link BlankFragment#newInstance} factory method to
+ * Use the {@link SensorMapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BlankFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks ,GoogleApiClient.OnConnectionFailedListener {
+public class SensorMapFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks ,GoogleApiClient.OnConnectionFailedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "SENSOR_LIST";
@@ -47,6 +50,7 @@ public class BlankFragment extends Fragment implements GoogleApiClient.Connectio
     private TextView mTextView;
     private SupportMapFragment mMapFragment;
     private boolean mAddedMarkers;
+    private ImageView mDrivingDirectionImage;
     private Marker mSelectedMarker;
 
 
@@ -61,17 +65,17 @@ public class BlankFragment extends Fragment implements GoogleApiClient.Connectio
      *
      * @param mySensorList Parameter 1.
      *
-     * @return A new instance of fragment BlankFragment.
+     * @return A new instance of fragment SensorMapFragment.
      */
-    public static BlankFragment newInstance(ArrayList<MySensor> mySensorList) {
-        BlankFragment fragment = new BlankFragment();
+    public static SensorMapFragment newInstance(ArrayList<MySensor> mySensorList) {
+        SensorMapFragment fragment = new SensorMapFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_PARAM1, mySensorList);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public BlankFragment() {
+    public SensorMapFragment() {
         // Required empty public constructor
     }
 
@@ -97,6 +101,8 @@ public class BlankFragment extends Fragment implements GoogleApiClient.Connectio
                 .build();
 
         mTextView.setText("Select A Map Marker For Details");
+        mDrivingDirectionImage = (ImageView) myInflated.findViewById(R.id.directions_button);
+        mDrivingDirectionImage.setOnClickListener(driveButtonListener);
         return myInflated;
     }
 
@@ -159,13 +165,10 @@ public class BlankFragment extends Fragment implements GoogleApiClient.Connectio
             Log.d("omg android", "Already added Markers, don't reset map but reclick selected");
             if (mSelectedMarker!=null) {
                 mSelectedMarker.showInfoWindow();
-                String title = mSelectedMarker.getTitle().toString();
-                if (!title.equals("My Location")) {
-                    // All titles start with "Sensor #<index>" - substring 8,length is the index to our array
-                    int indexSensor = Integer.valueOf(title.substring(8, title.length()));
+                int indexSensor = getSensorIndexFromMarker(mSelectedMarker);
+                if (indexSensor != -1) {
                     mTextView.setText("Sensor #" + indexSensor + " - " + mySensorArrayList.get(indexSensor).getType()
                             + " " + mySensorArrayList.get(indexSensor).getValue() + mySensorArrayList.get(indexSensor).getUnit());
-
                 }
             }
         } else if (mLastLocation != null) {
@@ -178,10 +181,11 @@ public class BlankFragment extends Fragment implements GoogleApiClient.Connectio
             // Set current location to San Jose area
             double sjlat = 37.3382082;
             double sjlong = -121.8863286;
-            LatLng currentLoc = new LatLng(sjlat, sjlong);
-            mMap.addMarker(new MarkerOptions().position(new LatLng(sjlat, sjlong)).title("My Location"));
+            //LatLng currentLoc = new LatLng(sjlat, sjlong);
+            //mMap.addMarker(new MarkerOptions().position(new LatLng(sjlat, sjlong)).title("My Location"));
+            mLastLocation = new Location("san jose, ca");
+            mMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("My Location"));
             LatLng myLatLng = new LatLng(sjlat, sjlong);
-            LatLngBounds latlngBounds = new LatLngBounds(myLatLng, myLatLng);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
         }
         if (!mAddedMarkers) {
@@ -207,6 +211,36 @@ public class BlankFragment extends Fragment implements GoogleApiClient.Connectio
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d("omg android", "Connection to GoogleAPI failed!");
     }
+
+    // Respond to click event on Driving Button
+    private View.OnClickListener driveButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.directions_button) {
+                if (mLastLocation != null) {
+                    int index = getSensorIndexFromMarker(mSelectedMarker);
+                    // if there's a selected marker that isn't current location - drive to it!
+                    if (index != -1) {
+                        LatLng driveTo = mySensorArrayList.get(index).getLocation();
+                        //String url = "http://maps.google.com/maps?saddr=" + mLastLocation.getLatitude() + "," + mLastLocation.getLongitude() + "&daddr=" + driveTo.latitude + "," + driveTo.longitude + "&mode=driving";
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q="+driveTo.latitude+","+driveTo.longitude);
+                        Log.d("omg android", "Launching Intent to do directions - url is "+gmmIntentUri);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        intent.setPackage("com.google.android.apps.maps");
+                        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                            startActivity(intent);
+                        } else {
+                            Log.d("omg android", "Couldn't Resolve Directions Intent!");
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Select a marker to get directions", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Need a current location to get directions", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    };
 
     /**
      * This interface must be implemented by activities that contain this
@@ -270,16 +304,24 @@ public class BlankFragment extends Fragment implements GoogleApiClient.Connectio
             @Override
             public boolean onMarkerClick(Marker marker) {
                 mSelectedMarker = marker;
-                String title = marker.getTitle().toString();
-                if (title.equals("My Location")) { return false; }
-                // All titles start with "Sensor #<index>" - substring 8,length is the index to our array
-                int indexSensor = Integer.valueOf(title.substring(8, title.length()));
-                mTextView.setText("Sensor #" + indexSensor + " - " + mySensorArrayList.get(indexSensor).getType()
-                        + " " + mySensorArrayList.get(indexSensor).getValue() + mySensorArrayList.get(indexSensor).getUnit());
+                int indexSensor = getSensorIndexFromMarker(mSelectedMarker);
+                if (indexSensor != -1) {
+                    mTextView.setText("Sensor #" + indexSensor + " - " + mySensorArrayList.get(indexSensor).getType()
+                            + " " + mySensorArrayList.get(indexSensor).getValue() + mySensorArrayList.get(indexSensor).getUnit());
+                }
                 return false;
             }
 
         });
     }
+    private int getSensorIndexFromMarker(Marker m) {
+        if (m==null) { return -1; }
+        String title = m.getTitle().toString();
+        if (title.equals("My Location")) { return -1; }
+        int indexSensor = Integer.valueOf(title.substring(8, title.length()));
+        return indexSensor;
+    }
+
+
 
 }
