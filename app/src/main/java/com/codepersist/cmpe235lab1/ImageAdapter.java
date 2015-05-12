@@ -21,12 +21,14 @@ public class ImageAdapter extends BaseAdapter {
     private int [] mIcons = {
             R.drawable.login_icon, R.drawable.sensor_net_icon,
             R.drawable.sensor_map_icon, R.drawable.sensor_control_icon,
-            R.drawable.sensor_monitor_icon, R.drawable.sensor_data_icon };
+            R.drawable.sensor_monitor_icon, R.drawable.sensor_data_icon,
+            R.drawable.qr_icon, R.drawable.tutorials_icon};
 
 
     private int [] mIconName = {
             R.string.login, R.string.sensor_profile, R.string.sensor_map,
-            R.string.sensor_control, R.string.sensor_monitor, R.string.sensor_data
+            R.string.sensor_control, R.string.sensor_monitor, R.string.sensor_data,
+            R.string.qr_scan, R.string.tutorial
     };
 
     public ImageAdapter(Context c, LayoutInflater inflater) {

@@ -26,6 +26,12 @@ public class MySensor implements Parcelable {
         this.mLocation = location;
     }
 
+    public MySensor(int id, String type, String unit) {
+        this.mSensorId = id;
+        this.mType = type;
+        this.mUnit = unit;
+    }
+
     public MySensor(Parcel in) {
         String[] data = new String[6];
         in.readStringArray(data);
@@ -49,6 +55,8 @@ public class MySensor implements Parcelable {
     public LatLng getLocation() {
         return mLocation;
     }
+    public void setValue(String val) { this.mValue = val; }
+    public void setLocation(LatLng loc) { this.mLocation = loc; }
 
     @Override
     public int describeContents() {

@@ -1,6 +1,8 @@
 package com.codepersist.cmpe235lab1;
 
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
@@ -9,18 +11,25 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class MapTabActivity extends ActionBarActivity implements SensorMapFragment.OnFragmentInteractionListener, SensorListFragment.OnFragmentInteractionListener {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "SENSOR_LIST";
+    private static final String SENSORS = "SensorList";
+    public static final String PREFS_NAME="myPrefsFile";
+
     private FragmentTabHost mTabHost;
-    private ArrayList<MySensor> mMySensorList;
+    private List<MySensor> mMySensorList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,20 +38,32 @@ public class MapTabActivity extends ActionBarActivity implements SensorMapFragme
         mMySensorList = new ArrayList<MySensor>();
         // Create a dummy set of sensors when this Activity is opened.  We'll use
         // these for displaying on the map and in the listView
+        /* Moved this to the Main Activity and store the data in SharedPrefs
         double sjlat = 37.3382082;
         double sjlong = -121.8863286;
         LatLng currentLoc = new LatLng(sjlat, sjlong);
         createSensors(currentLoc);
-
+        */
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        //Toast.makeText(getApplicationContext(), "Shared Prefs = "+settings.getString(SENSORS, null), Toast.LENGTH_LONG).show();
+        Gson gson = new Gson();
+        Bundle sensorListBundle = new Bundle();
+        if (settings.contains(SENSORS)) {
+            Log.d("omg android:", "Retrieving the Sensor info from the Shared Preferences");
+            String json = settings.getString(SENSORS, null);
+            MySensor[] SensorItems = gson.fromJson(json, MySensor[].class);
+            mMySensorList = Arrays.asList(SensorItems);
+            mMySensorList = new ArrayList<>(mMySensorList);
+            sensorListBundle.putParcelableArrayList(ARG_PARAM1, new ArrayList<>(mMySensorList));
+        } else {
+            Log.d("omg android", "No Shared Preferences Exist.. How did that even happen?");
+        }
         setContentView(R.layout.activity_map_tab);
 
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 
 
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
-
-        Bundle sensorListBundle = new Bundle();
-        sensorListBundle.putParcelableArrayList(ARG_PARAM1, mMySensorList);
 
         mTabHost.addTab(
                 mTabHost.newTabSpec("Sensor Map").setIndicator("Sensor Map", null),
@@ -56,7 +77,7 @@ public class MapTabActivity extends ActionBarActivity implements SensorMapFragme
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_map_tab, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -70,6 +91,9 @@ public class MapTabActivity extends ActionBarActivity implements SensorMapFragme
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_contact) {
+            Intent contactIntent = new Intent(this, ContactActivity.class);
+            startActivity(contactIntent);
         }
 
         return super.onOptionsItemSelected(item);

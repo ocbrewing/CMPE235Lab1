@@ -197,6 +197,9 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_contact) {
+            Intent contactIntent = new Intent(this, ContactActivity.class);
+            startActivity(contactIntent);
         }
 
         return super.onOptionsItemSelected(item);

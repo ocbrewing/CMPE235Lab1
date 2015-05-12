@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -188,7 +189,7 @@ public class SensorMapFragment extends Fragment implements GoogleApiClient.Conne
             LatLng myLatLng = new LatLng(sjlat, sjlong);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
         }
-        if (!mAddedMarkers) {
+        if (!mAddedMarkers) {  /* Haven't added markers yet */
             Log.d("omg android", "Adding Sensor Markers");
             mAddedMarkers = true;
             // Even if GPS is off (no current location), add the sensor markers
@@ -306,7 +307,7 @@ public class SensorMapFragment extends Fragment implements GoogleApiClient.Conne
                 mSelectedMarker = marker;
                 int indexSensor = getSensorIndexFromMarker(mSelectedMarker);
                 if (indexSensor != -1) {
-                    mTextView.setText("Sensor #" + indexSensor + " - " + mySensorArrayList.get(indexSensor).getType()
+                    mTextView.setText("Sensor #" + mySensorArrayList.get(indexSensor).getId() + " - " + mySensorArrayList.get(indexSensor).getType()
                             + " " + mySensorArrayList.get(indexSensor).getValue() + mySensorArrayList.get(indexSensor).getUnit());
                 }
                 return false;
@@ -319,7 +320,13 @@ public class SensorMapFragment extends Fragment implements GoogleApiClient.Conne
         String title = m.getTitle().toString();
         if (title.equals("My Location")) { return -1; }
         int indexSensor = Integer.valueOf(title.substring(8, title.length()));
-        return indexSensor;
+        for (int i = 0 ; i < mySensorArrayList.size(); i++) {
+            if (mySensorArrayList.get(i).getId() == indexSensor) {
+                return i;
+            }
+        }
+        // If no object in the list has the same sensor Id, return -1
+        return -1;
     }
 
 
