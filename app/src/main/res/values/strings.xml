@@ -2,6 +2,7 @@
     <string name="app_name">Sensor Solutions</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_contact">Contact Us</string>
     <string name="sensor_control">Control</string>
     <string name="login">Login</string>
     <string name="sensor_profile">My Sensors</string>
@@ -9,10 +10,33 @@
     <string name="sensor_monitor">Monitor</string>
     <string name="sensor_data">Sensor Data</string>
     <string name="title_activity_maps">Sensor Map</string>
+    <string name="qr_scan">QR Scan</string>
+    <string name="tutorial">Tutorial</string>
     <string name="placeholder">PlaceHolder</string>
 
     <string name="title_activity_sensor_data">Sensor Data</string>
     <string name="title_activity_monitor">Sensor Monitor</string>
     <string name="title_activity_control">Sensor Control</string>
     <string name="title_activity_my_sensors">My Sensors</string>
+    <string name="title_activity_contact">Contact Us</string>
+
+    <string name="contact_name_hint">Your Name</string>
+    <string name="contact_email_hint">Your e-mail</string>
+    <string name="contact_send_to">ocbrewing@gmail.com</string>
+    <string name="contact_subject_hint">Subject</string>
+    <string name="contact_body_hint">Type Your Message Here</string>
+    <string name="contact_response">Would you like a response e-mail?</string>
+    <string name="contact_submit">Submit Feedback</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_qr_scan">QrScanActivity</string>
+    <string name="title_activity_tutorial">TutorialActivity</string>
+    <string name="dialog_msg_url">Navigate to </string>
+    <string name="dialog_msg_sensor">Add Sensor </string>
+    <string name="positive_button">Yes</string>
+    <string name="negative_button">No</string>
+
+    <string name="tutorial_1">Tutorial:Connect a Temp Sensor</string>
+    <string name="tutorial_2">Tutorial:About Your Sensor Gateway</string>
+    <string name="tutorial_3">Tutorial:About Parse our DBaaS</string>
 </resources>
