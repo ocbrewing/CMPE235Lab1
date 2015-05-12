@@ -4,8 +4,8 @@
     android:paddingTop="10dp" android:paddingBottom="10dp">
 
     <ImageView
-        android:layout_width="130dp"
-        android:layout_height="130dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
 
         android:id="@+id/imagename"
         android:layout_alignParentTop="true"
